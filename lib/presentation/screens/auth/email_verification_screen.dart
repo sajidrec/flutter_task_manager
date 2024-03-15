@@ -44,6 +44,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                   TextFormField(
                     controller: _emailTEController,
                     keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value?.trim().isEmpty ?? true) {
+                        return "Enter email";
+                      }
+                      return null;
+                    },
                     decoration: const InputDecoration(
                       hintText: 'Email',
                     ),
@@ -55,11 +61,13 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const PinVerificationScreen()));
+                        if (_formKey.currentState!.validate()) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const PinVerificationScreen()));
+                        }
                       },
                       child: const Icon(Icons.arrow_circle_right_outlined),
                     ),
