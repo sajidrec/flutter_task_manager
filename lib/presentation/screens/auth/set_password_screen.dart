@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/models/set_password_object.dart';
+import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/presentation/screens/auth/sign_in_screen.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
+import 'package:task_manager/presentation/widgets/show_snack_bar_message.dart';
+
+import '../../../data/utility/urls.dart';
 
 class SetPasswordScreen extends StatefulWidget {
-  const SetPasswordScreen({super.key});
+  const SetPasswordScreen({super.key, required this.email, required this.otp});
+
+  final String email, otp;
 
   @override
   State<SetPasswordScreen> createState() => _SetPasswordScreenState();
@@ -44,7 +51,19 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                   ),
                   TextFormField(
                     controller: _passwordTEController,
-                    keyboardType: TextInputType.emailAddress,
+                    keyboardType: TextInputType.text,
+                    validator: (value) {
+                      if (value == null) {
+                        return "Enter password";
+                      }
+                      if (value.trim().length < 8) {
+                        return "At least password length is 8";
+                      }
+
+                      // TODO: Lets try to implement password complex logic
+
+                      return null;
+                    },
                     decoration: const InputDecoration(
                       hintText: 'Password',
                     ),
@@ -54,7 +73,17 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                   ),
                   TextFormField(
                     controller: _confirmPasswordTEController,
-                    keyboardType: TextInputType.emailAddress,
+                    keyboardType: TextInputType.text,
+                    validator: (value) {
+                      if (value == null) {
+                        return "Enter password";
+                      }
+                      if (value.trim().length < 8) {
+                        return "At least password length is 8";
+                      }
+
+                      return null;
+                    },
                     decoration: const InputDecoration(
                       hintText: 'Confirm Password',
                     ),
@@ -65,7 +94,40 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          if (_passwordTEController.text !=
+                              _confirmPasswordTEController.text) {
+                            showSnackBarMessage(
+                                context, "Password didn't matched", true);
+                          } else {
+                            SetPasswordObject setPasswordObject =
+                                SetPasswordObject(
+                              email: widget.email,
+                              otp: widget.otp,
+                              password: _passwordTEController.text,
+                            );
+                            final response = await NetworkCaller.postRequest(
+                              Urls.setPasswordUrl,
+                              setPasswordObject.toJson(),
+                            );
+
+                            if (response.responseBody["status"] == "success") {
+                              showSnackBarMessage(
+                                  context, "Password Changed", false);
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const SignInScreen(),
+                                  ),
+                                  (route) => false);
+                            } else {
+                              showSnackBarMessage(
+                                  context, "Password not changed", true);
+                            }
+                          }
+                        }
+                      },
                       child: const Text('Confirm'),
                     ),
                   ),

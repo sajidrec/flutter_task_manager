@@ -105,8 +105,10 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SetPasswordScreen(),
+                                      builder: (context) => SetPasswordScreen(
+                                        email: widget.email,
+                                        otp: _pinTEController.text,
+                                      ),
                                     ),
                                     (route) => false);
                               }
