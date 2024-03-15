@@ -10,7 +10,7 @@ import 'package:task_manager/presentation/screens/main_bottom_nav_screen.dart';
 import 'package:task_manager/presentation/utils/on_update_screen.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
 import 'package:task_manager/presentation/widgets/profile_app_bar.dart';
-import 'package:task_manager/presentation/widgets/snack_bar_message.dart';
+import 'package:task_manager/presentation/widgets/show_snack_bar_message.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({super.key});

@@ -8,7 +8,7 @@ import 'package:task_manager/presentation/utils/app_colors.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
 import 'package:task_manager/presentation/widgets/empty_list_widget.dart';
 import 'package:task_manager/presentation/widgets/profile_app_bar.dart';
-import 'package:task_manager/presentation/widgets/snack_bar_message.dart';
+import 'package:task_manager/presentation/widgets/show_snack_bar_message.dart';
 import 'package:task_manager/presentation/widgets/task_card.dart';
 import 'package:task_manager/presentation/widgets/task_counter_card.dart';
 

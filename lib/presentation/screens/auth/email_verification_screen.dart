@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/presentation/screens/auth/pin_verification_screen.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
-import 'package:task_manager/presentation/widgets/snack_bar_message.dart';
+import 'package:task_manager/presentation/widgets/show_snack_bar_message.dart';
 
 import '../../../data/utility/urls.dart';
 
@@ -87,7 +87,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const PinVerificationScreen(),
+                                          PinVerificationScreen(
+                                        email: _emailTEController.text.trim(),
+                                      ),
                                     ),
                                     (route) => false);
                               }

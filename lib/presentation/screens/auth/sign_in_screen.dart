@@ -8,7 +8,7 @@ import 'package:task_manager/presentation/screens/auth/email_verification_screen
 import 'package:task_manager/presentation/screens/auth/sign_up_screen.dart';
 import 'package:task_manager/presentation/screens/main_bottom_nav_screen.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
-import 'package:task_manager/presentation/widgets/snack_bar_message.dart';
+import 'package:task_manager/presentation/widgets/show_snack_bar_message.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

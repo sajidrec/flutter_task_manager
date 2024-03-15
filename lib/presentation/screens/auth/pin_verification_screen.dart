@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/presentation/screens/auth/set_password_screen.dart';
 import 'package:task_manager/presentation/screens/auth/sign_in_screen.dart';
 import 'package:task_manager/presentation/utils/app_colors.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
+import 'package:task_manager/presentation/widgets/show_snack_bar_message.dart';
+
+import '../../../data/utility/urls.dart';
 
 class PinVerificationScreen extends StatefulWidget {
-  const PinVerificationScreen({super.key});
+  const PinVerificationScreen({super.key, required this.email});
+
+  final String email;
 
   @override
   State<PinVerificationScreen> createState() => _PinVerificationScreenState();
@@ -15,6 +21,8 @@ class PinVerificationScreen extends StatefulWidget {
 class _PinVerificationScreenState extends State<PinVerificationScreen> {
   final TextEditingController _pinTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  bool _pinVerifyInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +55,12 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                     controller: _pinTEController,
                     length: 6,
                     obscureText: false,
+                    validator: (value) {
+                      if (value?.length != 6) {
+                        return 'Enter 6 digit code sent to your email address';
+                      }
+                      return null;
+                    },
                     animationType: AnimationType.fade,
                     keyboardType: TextInputType.number,
                     pinTheme: PinTheme(
@@ -70,15 +84,54 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const SetPasswordScreen()));
-                      },
-                      child: const Text('Verify'),
+                    child: Visibility(
+                      visible: !_pinVerifyInProgress,
+                      replacement: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            _pinVerifyInProgress = true;
+                            setState(() {});
+
+                            final response = await NetworkCaller.getRequest(
+                              Urls.verifyOtpUrl(
+                                  widget.email, _pinTEController.text),
+                            );
+
+                            if (response.responseBody["status"] == "success") {
+                              if (mounted) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SetPasswordScreen(),
+                                    ),
+                                    (route) => false);
+                              }
+                            } else {
+                              showSnackBarMessage(
+                                context,
+                                "Invalid pin code",
+                                true,
+                              );
+                              if (mounted) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SignInScreen(),
+                                    ),
+                                    (route) => false);
+                              }
+                            }
+                            _pinVerifyInProgress = false;
+                            setState(() {});
+                          }
+                        },
+                        child: const Text('Verify'),
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -96,7 +149,8 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                           Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const SignInScreen()),
+                                builder: (context) => const SignInScreen(),
+                              ),
                               (route) => false);
                         },
                         child: const Text(
