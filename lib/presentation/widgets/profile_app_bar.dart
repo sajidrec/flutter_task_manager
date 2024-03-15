@@ -6,6 +6,7 @@ import 'package:task_manager/presentation/controllers/auth_controller.dart';
 import 'package:task_manager/presentation/screens/auth/sign_in_screen.dart';
 import 'package:task_manager/presentation/screens/update_profile_screen.dart';
 import 'package:task_manager/presentation/utils/app_colors.dart';
+import 'package:task_manager/presentation/utils/on_update_screen.dart';
 
 PreferredSizeWidget get profileAppBar {
   return AppBar(
@@ -13,16 +14,22 @@ PreferredSizeWidget get profileAppBar {
     backgroundColor: AppColors.themeColor,
     title: GestureDetector(
       onTap: () {
-        Navigator.push(
+        if (!OnUpdateScreen.alreadyTapped) {
+          OnUpdateScreen.alreadyTapped = true;
+          Navigator.push(
             TaskManager.navigatorKey.currentState!.context,
             MaterialPageRoute(
-                builder: (context) => const UpdateProfileScreen()));
+              builder: (context) => const UpdateProfileScreen(),
+            ),
+          );
+        }
       },
       child: Row(
         children: [
           CircleAvatar(
             // TODO: fix profile picture null
-            backgroundImage: MemoryImage(base64Decode(AuthController.userData!.photo!)),
+            backgroundImage:
+                MemoryImage(base64Decode(AuthController.userData!.photo!)),
           ),
           const SizedBox(
             width: 12,
@@ -50,7 +57,8 @@ PreferredSizeWidget get profileAppBar {
                 await AuthController.clearUserData();
                 Navigator.pushAndRemoveUntil(
                     TaskManager.navigatorKey.currentState!.context,
-                    MaterialPageRoute(builder: (context) => const SignInScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => const SignInScreen()),
                     (route) => false);
               },
               icon: const Icon(Icons.logout))

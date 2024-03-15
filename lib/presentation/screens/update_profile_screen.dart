@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:task_manager/data/models/user_data.dart';
@@ -9,6 +7,7 @@ import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/utility/urls.dart';
 import 'package:task_manager/presentation/controllers/auth_controller.dart';
 import 'package:task_manager/presentation/screens/main_bottom_nav_screen.dart';
+import 'package:task_manager/presentation/utils/on_update_screen.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
 import 'package:task_manager/presentation/widgets/profile_app_bar.dart';
 import 'package:task_manager/presentation/widgets/snack_bar_message.dart';
@@ -30,6 +29,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   XFile? _pickedImage;
   bool _updateProfileInProgress = false;
 
+
+
   @override
   void initState() {
     super.initState();
@@ -41,110 +42,116 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: profileAppBar,
-      body: BackgroundWidget(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 48,
-                  ),
-                  Text(
-                    'Update Profile',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontSize: 24),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  imagePickerButton(),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  TextFormField(
-                    enabled: false,
-                    controller: _emailTEController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(hintText: 'Email'),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  TextFormField(
-                    controller: _firstNameTEController,
-                    decoration: const InputDecoration(hintText: 'First name'),
-                    validator: (String? value) {
-                      if (value?.trim().isEmpty ?? true) {
-                        return 'Enter your first name';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  TextFormField(
-                    controller: _lastNameTEController,
-                    decoration: const InputDecoration(hintText: 'Last name'),
-                    validator: (String? value) {
-                      if (value?.trim().isEmpty ?? true) {
-                        return 'Enter your last name';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  TextFormField(
-                    controller: _mobileTEController,
-                    keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(hintText: 'Mobile'),
-                    validator: (String? value) {
-                      if (value?.trim().length != 11 ?? true) {
-                        return 'Enter valid mobile number (11 length)';
-                      }
-                      return null;
-                    },
-                    maxLength: 11,
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  TextFormField(
-                    controller: _passwordTEController,
-                    decoration:
-                        const InputDecoration(hintText: 'Password(Optional)'),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Visibility(
-                      visible: _updateProfileInProgress == false,
-                      replacement: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if(_formKey.currentState!.validate()){
-                            _updateProfile();
-                          }
-                        },
-                        child: const Icon(Icons.arrow_circle_right_outlined),
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        OnUpdateScreen.alreadyTapped = false;
+      },
+      child: Scaffold(
+        appBar: profileAppBar,
+        body: BackgroundWidget(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 48,
+                    ),
+                    Text(
+                      'Update Profile',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(fontSize: 24),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    imagePickerButton(),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    TextFormField(
+                      enabled: false,
+                      controller: _emailTEController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(hintText: 'Email'),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    TextFormField(
+                      controller: _firstNameTEController,
+                      decoration: const InputDecoration(hintText: 'First name'),
+                      validator: (String? value) {
+                        if (value?.trim().isEmpty ?? true) {
+                          return 'Enter your first name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    TextFormField(
+                      controller: _lastNameTEController,
+                      decoration: const InputDecoration(hintText: 'Last name'),
+                      validator: (String? value) {
+                        if (value?.trim().isEmpty ?? true) {
+                          return 'Enter your last name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    TextFormField(
+                      controller: _mobileTEController,
+                      keyboardType: TextInputType.phone,
+                      decoration: const InputDecoration(hintText: 'Mobile'),
+                      validator: (String? value) {
+                        if (value?.trim().length != 11 ?? true) {
+                          return 'Enter valid mobile number (11 length)';
+                        }
+                        return null;
+                      },
+                      maxLength: 11,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    TextFormField(
+                      controller: _passwordTEController,
+                      decoration:
+                          const InputDecoration(hintText: 'Password(Optional)'),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Visibility(
+                        visible: _updateProfileInProgress == false,
+                        replacement: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _updateProfile();
+                            }
+                          },
+                          child: const Icon(Icons.arrow_circle_right_outlined),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
