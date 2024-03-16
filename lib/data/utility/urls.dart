@@ -23,4 +23,6 @@ class Urls {
   static String setPasswordUrl = "$_baseUrl/RecoverResetPass";
 
   static String progressTaskListUrl = "$_baseUrl/listTaskByStatus/Progress";
+
+  static String cancelledTaskListUrl = "$_baseUrl/listTaskByStatus/Cancelled";
 }
