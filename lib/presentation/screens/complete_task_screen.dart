@@ -35,7 +35,6 @@ class _CompleteTaskScreenState extends State<CompleteTaskScreen> {
           replacement: const Center(
             child: CircularProgressIndicator(),
           ),
-          // TODO: Make it workable
           child: RefreshIndicator(
             onRefresh: () async {
               _getAllCompletedTaskList();
@@ -66,19 +65,17 @@ class _CompleteTaskScreenState extends State<CompleteTaskScreen> {
     setState(() {});
     final response = await NetworkCaller.getRequest(Urls.completedTaskList);
     if (response.isSuccess) {
-      _completedTaskListWrapper = TaskListWrapper.fromJson(response.responseBody);
+      _completedTaskListWrapper =
+          TaskListWrapper.fromJson(response.responseBody);
       _getAllCompletedTaskListInProgress = false;
       setState(() {});
     } else {
       _getAllCompletedTaskListInProgress = false;
       setState(() {});
       if (mounted) {
-        showSnackBarMessage(
-            context,
-            response.errorMessage ??
-                'Get completed task list has been failed');
+        showSnackBarMessage(context,
+            response.errorMessage ?? 'Get completed task list has been failed');
       }
     }
   }
-
 }

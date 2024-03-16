@@ -7,6 +7,7 @@ void main() {
 
 
 /// TODO: Assignment
-/// 1. Forgot password ui and api flow
-/// 2. Progress task api integration
+/// 1. Forgot password ui and api flow -> done
+/// 2. Progress task api integration -> done
 /// 3. Cancelled task api integration
+/// 4. optional clicking on update goto update even if it's already on update screen -> fixed

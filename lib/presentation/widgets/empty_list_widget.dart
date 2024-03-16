@@ -7,8 +7,19 @@ class EmptyListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('No items'),
+    return ListView.builder(
+      itemCount: 1,
+      itemBuilder: (context, index) => const Center(
+        child: Padding(
+          padding: EdgeInsets.only(top: 20),
+          child: Text(
+            "No Items",
+            style: TextStyle(fontSize: 24),
+          ),
+        ),
+      ),
+      // child: const Center(
+      //   // child: Text('No items'),
     );
   }
 }

@@ -21,4 +21,6 @@ class Urls {
       "$_baseUrl/RecoverVerifyOTP/$email/$otp";
 
   static String setPasswordUrl = "$_baseUrl/RecoverResetPass";
+
+  static String progressTaskListUrl = "$_baseUrl/listTaskByStatus/Progress";
 }
