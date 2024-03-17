@@ -14,15 +14,22 @@ PreferredSizeWidget get profileAppBar {
     backgroundColor: AppColors.themeColor,
     title: GestureDetector(
       onTap: () {
-        if (!OnUpdateScreen.alreadyTapped) {
-          OnUpdateScreen.alreadyTapped = true;
-          Navigator.push(
-            TaskManager.navigatorKey.currentState!.context,
-            MaterialPageRoute(
-              builder: (context) => const UpdateProfileScreen(),
-            ),
-          );
-        }
+        Navigator.push(
+          TaskManager.navigatorKey.currentState!.context,
+          MaterialPageRoute(
+            builder: (context) => const UpdateProfileScreen(),
+          ),
+        );
+        // TODO: Some error occurred need to be fixed
+        // if (!OnUpdateScreen.alreadyTapped) {
+        //   OnUpdateScreen.alreadyTapped = true;
+        //   Navigator.push(
+        //     TaskManager.navigatorKey.currentState!.context,
+        //     MaterialPageRoute(
+        //       builder: (context) => const UpdateProfileScreen(),
+        //     ),
+        //   );
+        // }
       },
       child: Row(
         children: [

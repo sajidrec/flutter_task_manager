@@ -3,6 +3,7 @@ import 'package:task_manager/data/models/response_object.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/utility/urls.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
+import 'package:task_manager/presentation/widgets/password_validation_checker.dart';
 import 'package:task_manager/presentation/widgets/show_snack_bar_message.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -112,14 +113,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: const InputDecoration(
                       hintText: 'Password',
                     ),
-                    validator: (String? value) {
-                      if (value?.trim().isEmpty ?? true) {
-                        return 'Enter your password';
+                    validator: (value) {
+                      if(passwordIsValid(value)){
+                        return null;
                       }
-                      if (value!.length <= 6) {
-                        return 'Password should more than 6 letters';
+                      else{
+                        return "Minimum 8 in size with letter and number combine";
                       }
-                      return null;
                     },
                   ),
                   const SizedBox(

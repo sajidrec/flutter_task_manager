@@ -6,6 +6,7 @@ import 'package:task_manager/presentation/widgets/background_widget.dart';
 import 'package:task_manager/presentation/widgets/show_snack_bar_message.dart';
 
 import '../../../data/utility/urls.dart';
+import '../../widgets/password_validation_checker.dart';
 
 class SetPasswordScreen extends StatefulWidget {
   const SetPasswordScreen({super.key, required this.email, required this.otp});
@@ -53,16 +54,11 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                     controller: _passwordTEController,
                     keyboardType: TextInputType.text,
                     validator: (value) {
-                      if (value == null) {
-                        return "Enter password";
+                      if (passwordIsValid(value)) {
+                        return null;
+                      } else {
+                        return "Minimum 8 in size with letter and number combine";
                       }
-                      if (value.trim().length < 8) {
-                        return "At least password length is 8";
-                      }
-
-                      // TODO: Lets try to implement password complex logic
-
-                      return null;
                     },
                     decoration: const InputDecoration(
                       hintText: 'Password',
@@ -75,14 +71,11 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                     controller: _confirmPasswordTEController,
                     keyboardType: TextInputType.text,
                     validator: (value) {
-                      if (value == null) {
-                        return "Enter password";
+                      if (passwordIsValid(value)) {
+                        return null;
+                      } else {
+                        return "Minimum 8 in size with letter and number combine";
                       }
-                      if (value.trim().length < 8) {
-                        return "At least password length is 8";
-                      }
-
-                      return null;
                     },
                     decoration: const InputDecoration(
                       hintText: 'Confirm Password',

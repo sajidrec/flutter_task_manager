@@ -9,6 +9,7 @@ import 'package:task_manager/presentation/controllers/auth_controller.dart';
 import 'package:task_manager/presentation/screens/main_bottom_nav_screen.dart';
 import 'package:task_manager/presentation/utils/on_update_screen.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
+import 'package:task_manager/presentation/widgets/password_validation_checker.dart';
 import 'package:task_manager/presentation/widgets/profile_app_bar.dart';
 import 'package:task_manager/presentation/widgets/show_snack_bar_message.dart';
 
@@ -28,8 +29,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   XFile? _pickedImage;
   bool _updateProfileInProgress = false;
-
-
 
   @override
   void initState() {
@@ -127,6 +126,16 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     ),
                     TextFormField(
                       controller: _passwordTEController,
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return null;
+                        } else {
+                          if (!passwordIsValid(value)) {
+                            return "Minimum 8 in size with letter and number combine";
+                          }
+                          return null;
+                        }
+                      },
                       decoration:
                           const InputDecoration(hintText: 'Password(Optional)'),
                     ),
