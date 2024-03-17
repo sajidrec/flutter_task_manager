@@ -33,12 +33,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 60,),
+                  const SizedBox(
+                    height: 60,
+                  ),
                   Text(
                     'Join With Us',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   TextFormField(
                     controller: _emailTEController,
                     keyboardType: TextInputType.emailAddress,
@@ -170,12 +174,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<void> _signUp() async {
     _isRegistrationInProgress = true;
     setState(() {});
+
     Map<String, dynamic> inputParams = {
       "email": _emailTEController.text.trim(),
       "firstName": _firstNameTEController.text.trim(),
       "lastName": _lastNameTEController.text.trim(),
       "mobile": _mobileTEController.text.trim(),
       "password": _passwordTEController.text,
+      "photo": "",
     };
 
     final ResponseObject response =
@@ -205,5 +211,4 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _passwordTEController.dispose();
     super.dispose();
   }
-
 }
