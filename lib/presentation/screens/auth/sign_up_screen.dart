@@ -97,8 +97,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       hintText: 'Mobile',
                     ),
                     validator: (String? value) {
-                      if (value?.trim().isEmpty ?? true) {
-                        return 'Enter your mobile';
+                      if (value?.trim().length != 11 ?? true) {
+                        return 'Enter valid mobile number (11 length)';
                       }
                       return null;
                     },
@@ -114,10 +114,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       hintText: 'Password',
                     ),
                     validator: (value) {
-                      if(passwordIsValid(value)){
+                      if (passwordIsValid(value)) {
                         return null;
-                      }
-                      else{
+                      } else {
                         return "Minimum 8 in size with letter and number combine";
                       }
                     },

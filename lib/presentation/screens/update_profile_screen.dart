@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:task_manager/data/models/user_data.dart';
 import 'package:task_manager/data/services/network_caller.dart';
@@ -240,6 +241,18 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       List<int> bytes = File(_pickedImage!.path).readAsBytesSync();
       photo = base64Encode(bytes);
       inputParams['photo'] = photo;
+    } else {
+      final userData = await AuthController.getUserData();
+
+      final response = await get(
+        Uri.parse(
+          "https://i.ibb.co/7vj91CB/ok.png",
+        ),
+      );
+
+      photo = base64Encode(response.bodyBytes);
+
+      // inputParams['photo'] = photo;
     }
 
     final response =
