@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:task_manager/data/models/response_object.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/utility/urls.dart';
@@ -182,6 +185,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
       "password": _passwordTEController.text,
       "photo": "",
     };
+
+    final dummyImage = await get(
+      Uri.parse(
+        "https://i.ibb.co/7vj91CB/ok.png",
+      ),
+    );
+
+    inputParams["photo"] = base64Encode(dummyImage.bodyBytes);
 
     final ResponseObject response =
         await NetworkCaller.postRequest(Urls.registration, inputParams);

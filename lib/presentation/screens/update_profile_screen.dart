@@ -242,8 +242,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       photo = base64Encode(bytes);
       inputParams['photo'] = photo;
     } else {
-      final userData = await AuthController.getUserData();
-
       final response = await get(
         Uri.parse(
           "https://i.ibb.co/7vj91CB/ok.png",
