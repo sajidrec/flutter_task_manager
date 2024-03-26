@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/data/models/login_response.dart';
-import 'package:task_manager/data/models/response_object.dart';
-import 'package:task_manager/data/services/network_caller.dart';
-import 'package:task_manager/data/utility/urls.dart';
-import 'package:task_manager/presentation/controllers/auth_controller.dart';
+import 'package:get/get.dart';
+import 'package:task_manager/presentation/controllers/sign_in_controller.dart';
 import 'package:task_manager/presentation/screens/auth/email_verification_screen.dart';
 import 'package:task_manager/presentation/screens/auth/sign_up_screen.dart';
 import 'package:task_manager/presentation/screens/main_bottom_nav_screen.dart';
@@ -21,7 +18,8 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _isLoginInProgress = false;
+
+  final SignInController _signInController = Get.find<SignInController>();
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +47,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     decoration: const InputDecoration(
                       hintText: 'Email',
                     ),
-                    // TODO: How to reuse this
                     validator: (String? value) {
                       if (value?.trim().isEmpty ?? true) {
                         return 'Enter your email';
@@ -78,20 +75,23 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: Visibility(
-                      visible: _isLoginInProgress == false,
-                      replacement: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _signIn();
-                          }
-                        },
-                        child: const Icon(Icons.arrow_circle_right_outlined),
-                      ),
-                    ),
+                    child: GetBuilder<SignInController>(
+                        builder: (signInController) {
+                      return Visibility(
+                        visible: !signInController.inProgress,
+                        replacement: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _signIn();
+                            }
+                          },
+                          child: const Icon(Icons.arrow_circle_right_outlined),
+                        ),
+                      );
+                    }),
                   ),
                   const SizedBox(
                     height: 60,
@@ -146,41 +146,47 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<void> _signIn() async {
-    _isLoginInProgress = true;
-    setState(() {});
-    Map<String, dynamic> inputParams = {
-      'email': _emailTEController.text.trim(),
-      'password': _passwordTEController.text,
-    };
-    final ResponseObject response = await NetworkCaller.postRequest(
-        Urls.login, inputParams,
-        fromSignIn: true);
-    _isLoginInProgress = false;
-    setState(() {});
+    // _isLoginInProgress = true;
+    // setState(() {});
+    // Map<String, dynamic> inputParams = {
+    //   'email': _emailTEController.text.trim(),
+    //   'password': _passwordTEController.text,
+    // };
+    // final ResponseObject response = await NetworkCaller.postRequest(
+    //     Urls.login, inputParams,
+    //     fromSignIn: true);
+    // _isLoginInProgress = false;
+    // setState(() {});
 
-    if (response.isSuccess) {
-      if (!mounted) {
-        return;
-      }
+    final bool result = await _signInController.signIn(
+        _emailTEController.text.trim(), _passwordTEController.text);
 
-      LoginResponse loginResponse =
-          LoginResponse.fromJson(response.responseBody);
-
-      /// Save the data to local cache
-      await AuthController.saveUserData(loginResponse.userData!);
-      await AuthController.saveUserToken(loginResponse.token!);
+    if (result) {
+      // if (!mounted) {
+      //   return;
+      // }
+      //
+      // LoginResponse loginResponse =
+      //     LoginResponse.fromJson(response.responseBody);
+      //
+      // /// Save the data to local cache
+      // await AuthController.saveUserData(loginResponse.userData!);
+      // await AuthController.saveUserToken(loginResponse.token!);
 
       if (mounted) {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
                 builder: (context) => const MainBottomNavScreen()),
-                (route) => false);
+            (route) => false);
       }
     } else {
+      // showSnackBarMessage(context, "error here");
       if (mounted) {
         showSnackBarMessage(
-            context, response.errorMessage ?? 'Login failed! Try again');
+          context,
+          _signInController.errorMessage,
+        );
       }
     }
   }
