@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/data/models/task_list_wrapper.dart';
-import 'package:task_manager/data/services/network_caller.dart';
-import 'package:task_manager/data/utility/urls.dart';
+import 'package:task_manager/presentation/controllers/completed_task_controller.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
 import 'package:task_manager/presentation/widgets/empty_list_widget.dart';
 import 'package:task_manager/presentation/widgets/profile_app_bar.dart';
@@ -16,8 +16,9 @@ class CompleteTaskScreen extends StatefulWidget {
 }
 
 class _CompleteTaskScreenState extends State<CompleteTaskScreen> {
-  bool _getAllCompletedTaskListInProgress = false;
   TaskListWrapper _completedTaskListWrapper = TaskListWrapper();
+  final CompletedTaskController _completedTaskController =
+      Get.find<CompletedTaskController>();
 
   @override
   void initState() {
@@ -30,51 +31,51 @@ class _CompleteTaskScreenState extends State<CompleteTaskScreen> {
     return Scaffold(
       appBar: profileAppBar,
       body: BackgroundWidget(
-        child: Visibility(
-          visible: _getAllCompletedTaskListInProgress == false,
-          replacement: const Center(
-            child: CircularProgressIndicator(),
-          ),
-          child: RefreshIndicator(
-            onRefresh: () async {
-              _getAllCompletedTaskList();
-            },
-            child: Visibility(
-              visible: _completedTaskListWrapper.taskList?.isNotEmpty ?? false,
-              replacement: const EmptyListWidget(),
-              child: ListView.builder(
-                itemCount: _completedTaskListWrapper.taskList?.length ?? 0,
-                itemBuilder: (context, index) {
-                  return TaskCard(
-                    taskItem: _completedTaskListWrapper.taskList![index],
-                    refreshList: () {
-                      _getAllCompletedTaskList();
-                    },
-                  );
-                },
+        child: GetBuilder<CompletedTaskController>(
+            builder: (completedTaskController) {
+          return Visibility(
+            visible: !completedTaskController.inProgress,
+            replacement: const Center(
+              child: CircularProgressIndicator(),
+            ),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                _getAllCompletedTaskList();
+              },
+              child: Visibility(
+                visible:
+                    _completedTaskListWrapper.taskList?.isNotEmpty ?? false,
+                replacement: const EmptyListWidget(),
+                child: ListView.builder(
+                  itemCount: _completedTaskListWrapper.taskList?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    return TaskCard(
+                      taskItem: _completedTaskListWrapper.taskList![index],
+                      refreshList: () {
+                        _getAllCompletedTaskList();
+                      },
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        }),
       ),
     );
   }
 
   Future<void> _getAllCompletedTaskList() async {
-    _getAllCompletedTaskListInProgress = true;
-    setState(() {});
-    final response = await NetworkCaller.getRequest(Urls.completedTaskList);
-    if (response.isSuccess) {
+
+    bool result = await _completedTaskController.getAllCompletedTaskList();
+
+    if (result) {
       _completedTaskListWrapper =
-          TaskListWrapper.fromJson(response.responseBody);
-      _getAllCompletedTaskListInProgress = false;
-      setState(() {});
+          _completedTaskController.completedTaskListWrapper;
+
     } else {
-      _getAllCompletedTaskListInProgress = false;
-      setState(() {});
       if (mounted) {
-        showSnackBarMessage(context,
-            response.errorMessage ?? 'Get completed task list has been failed');
+        showSnackBarMessage(context, _completedTaskController.errorMessage);
       }
     }
   }

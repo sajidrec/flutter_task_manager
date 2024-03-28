@@ -17,7 +17,6 @@ class CancelledTaskScreen extends StatefulWidget {
 }
 
 class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
-  // bool _getAllCompletedTaskListInProgress = false;
   TaskListWrapper _cancelledTaskListWrapper = TaskListWrapper();
   final CancelledTaskController _cancelledTaskController =
       Get.find<CancelledTaskController>();
@@ -71,20 +70,12 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
   }
 
   Future<void> _getAllCancelledTaskList() async {
-    // _getAllCompletedTaskListInProgress = true;
-    // setState(() {});
-    // final response = await NetworkCaller.getRequest(Urls.cancelledTaskListUrl);
-
     bool result = await _cancelledTaskController.getAllCancelledTaskList();
 
     if (result) {
       _cancelledTaskListWrapper =
           _cancelledTaskController.cancelledTaskListWrapper;
-      // _getAllCompletedTaskListInProgress = false;
-      // setState(() {});
     } else {
-      // _getAllCompletedTaskListInProgress = false;
-      // setState(() {});
       if (mounted) {
         showSnackBarMessage(context, _cancelledTaskController.errorMessage);
       }

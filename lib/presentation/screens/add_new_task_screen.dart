@@ -25,11 +25,6 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      // WillPopScope
-      // onWillPop: () async {
-      //   Navigator.pop(context, _shouldRefreshNewTaskList);
-      //   return false;
-      // },
       canPop: false,
       onPopInvoked: (didPop) {
         if (didPop) {
@@ -121,21 +116,6 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
   }
 
   Future<void> _addNewTask() async {
-    // _addNewTaskInProgress = true;
-    // setState(() {});
-    //
-    // Map<String, dynamic> inputParams = {
-    //   "title": _titleTEController.text.trim(),
-    //   "description": _descriptionTEController.text.trim(),
-    //   "status": "New"
-    // };
-    //
-    // final response =
-    //     await NetworkCaller.postRequest(Urls.createTask, inputParams);
-    //
-    // _addNewTaskInProgress = false;
-    // setState(() {});
-
     final result = await _addNewTaskController.addNewTask(
       _titleTEController.text.trim(),
       _descriptionTEController.text.trim(),
