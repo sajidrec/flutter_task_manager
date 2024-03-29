@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/data/models/set_password_object.dart';
-import 'package:task_manager/data/services/network_caller.dart';
+import 'package:task_manager/presentation/controllers/auth/set_password_controller.dart';
 import 'package:task_manager/presentation/screens/auth/sign_in_screen.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
 import 'package:task_manager/presentation/widgets/show_snack_bar_message.dart';
 
-import '../../../data/utility/urls.dart';
 import '../../widgets/password_validation_checker.dart';
 
 class SetPasswordScreen extends StatefulWidget {
@@ -22,6 +22,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
   final TextEditingController _confirmPasswordTEController =
       TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _setPasswordController = Get.find<SetPasswordController>();
 
   @override
   Widget build(BuildContext context) {
@@ -100,23 +101,17 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                               otp: widget.otp,
                               password: _passwordTEController.text,
                             );
-                            final response = await NetworkCaller.postRequest(
-                              Urls.setPasswordUrl,
-                              setPasswordObject.toJson(),
-                            );
 
-                            if (response.responseBody["status"] == "success") {
+                            final result = await _setPasswordController
+                                .setPassword(setPasswordObject);
+
+                            if (result) {
                               showSnackBarMessage(
                                   context, "Password Changed", false);
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const SignInScreen(),
-                                  ),
-                                  (route) => false);
+                              Get.offAll(const SignInScreen());
                             } else {
-                              showSnackBarMessage(
-                                  context, "Password not changed", true);
+                              showSnackBarMessage(context,
+                                  _setPasswordController.errorMessage, true);
                             }
                           }
                         }
@@ -136,11 +131,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const SignInScreen()),
-                              (route) => false);
+                          Get.offAll(const SignInScreen());
                         },
                         child: const Text(
                           'Sign in',

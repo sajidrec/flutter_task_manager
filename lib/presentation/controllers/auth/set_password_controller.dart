@@ -1,8 +1,9 @@
 import 'package:get/get.dart';
+import 'package:task_manager/data/models/set_password_object.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/utility/urls.dart';
 
-class PinVerificationController extends GetxController {
+class SetPasswordController extends GetxController {
   bool _inProgress = false;
   String _errorMessage = "";
 
@@ -10,20 +11,20 @@ class PinVerificationController extends GetxController {
 
   String get errorMessage => _errorMessage;
 
-  Future<bool> pinVerification(String email, String pinCode) async {
+  Future<bool> setPassword(SetPasswordObject setPasswordObject) async {
     bool isSuccessful = false;
     _inProgress = true;
     update();
 
-    final response = await NetworkCaller.getRequest(
-      Urls.verifyOtpUrl(email, pinCode),
+    final response = await NetworkCaller.postRequest(
+      Urls.setPasswordUrl,
+      setPasswordObject.toJson(),
     );
 
-
-    if (response.responseBody["status"] == "success") {
+    if (response.isSuccess) {
       isSuccessful = true;
     } else {
-      _errorMessage = "Wrong Pin Code";
+      _errorMessage = "Something went wrong.";
     }
 
     _inProgress = false;
