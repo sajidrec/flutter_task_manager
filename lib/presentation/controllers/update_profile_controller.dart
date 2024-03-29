@@ -1,7 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 import 'package:task_manager/data/models/user_data.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/utility/urls.dart';
@@ -40,14 +40,9 @@ class UpdateProfileController extends GetxController {
     }
 
     if (_photo == null) {
-
-      final response = await get(
-        Uri.parse(
-          "https://i.ibb.co/7vj91CB/ok.png",
-        ),
-      );
-
-      _photo = base64Encode(response.bodyBytes);
+      List<int> bytes =
+          File(AuthController.userData!.getPhoto).readAsBytesSync();
+      _photo = base64Encode(bytes);
     }
 
     inputParams['photo'] = _photo;
@@ -65,8 +60,8 @@ class UpdateProfileController extends GetxController {
       );
 
       await AuthController.saveUserData(userData);
-      isSuccessful = true;
 
+      isSuccessful = true;
     } else {
       _errorMessage = "Update profile failed! Try again.";
     }

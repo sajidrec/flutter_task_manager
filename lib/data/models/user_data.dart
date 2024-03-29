@@ -5,7 +5,12 @@ class UserData {
   String? mobile;
   String photo = "";
 
-  UserData({this.email, this.firstName, this.lastName, this.mobile, required this.photo});
+  UserData(
+      {this.email,
+      this.firstName,
+      this.lastName,
+      this.mobile,
+      required this.photo});
 
   UserData.fromJson(Map<String, dynamic> json) {
     email = json['email'];
@@ -24,6 +29,8 @@ class UserData {
     data['photo'] = photo;
     return data;
   }
+
+  String get getPhoto => photo;
 
   String get fullName {
     return '${firstName ?? ''} ${lastName ?? ''}';

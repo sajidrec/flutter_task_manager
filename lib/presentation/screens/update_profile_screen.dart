@@ -243,11 +243,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
     if (result) {
       if (mounted) {
-        // Navigator.pushAndRemoveUntil(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => const MainBottomNavScreen()),
-        //     (route) => false);
         Get.offAll(const MainBottomNavScreen());
         showSnackBarMessage(context, "update successful", false);
       }
