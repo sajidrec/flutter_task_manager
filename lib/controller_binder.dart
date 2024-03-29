@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:task_manager/presentation/controllers/add_new_task_controller.dart';
 import 'package:task_manager/presentation/controllers/auth/email_verification_controller.dart';
+import 'package:task_manager/presentation/controllers/auth/pin_verification_controller.dart';
 import 'package:task_manager/presentation/controllers/cancelled_task_controller.dart';
 import 'package:task_manager/presentation/controllers/completed_task_controller.dart';
 import 'package:task_manager/presentation/controllers/count_task_by_status_controller.dart';
@@ -20,7 +21,8 @@ class ControllerBinder extends Bindings {
     Get.lazyPut(() => CompletedTaskController());
     Get.lazyPut(() => ProgressTaskController());
     Get.lazyPut(() => UpdateProfileController());
-    // Get.put(() => EmailVerificationController());
+    // Get.lazyPut(() => EmailVerificationController());
     Get.put(EmailVerificationController());
+    Get.put(PinVerificationController());
   }
 }

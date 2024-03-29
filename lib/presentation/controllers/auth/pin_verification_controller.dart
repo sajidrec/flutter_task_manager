@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/utility/urls.dart';
 
-class EmailVerificationController extends GetxController {
+class PinVerificationController extends GetxController {
   bool _inProgress = false;
   String _errorMessage = "";
 
@@ -10,22 +10,23 @@ class EmailVerificationController extends GetxController {
 
   String get errorMessage => _errorMessage;
 
-  Future<bool> emailVerification(String email) async {
+  Future<bool> pinVerification(String email, String pinCode) async {
     bool isSuccessful = false;
     _inProgress = true;
     update();
 
     final response = await NetworkCaller.getRequest(
-      Urls.forgetPasswordEmailUrl(
-        email.trim(),
-      ),
+      Urls.verifyOtpUrl(email, pinCode),
     );
 
-    if (response.isSuccess) {
-      isSuccessful = true;
+    print("Eta custom message ${email} - ${pinCode}");
 
+    print(response.responseBody);
+
+    if (response.responseBody["status"] == "success") {
+      isSuccessful = true;
     } else {
-      _errorMessage = "Something Went Wrong.";
+      _errorMessage = "Wrong Pin Code";
     }
 
     _inProgress = false;
