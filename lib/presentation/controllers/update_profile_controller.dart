@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:task_manager/data/models/user_data.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/utility/urls.dart';
-import 'package:task_manager/presentation/controllers/auth_controller.dart';
+import 'package:task_manager/presentation/controllers/auth/auth_controller.dart';
 
 class UpdateProfileController extends GetxController {
   bool _inProgress = false;

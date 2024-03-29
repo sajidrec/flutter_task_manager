@@ -3,7 +3,7 @@ import 'package:task_manager/data/models/login_response.dart';
 import 'package:task_manager/data/models/response_object.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/utility/urls.dart';
-import 'package:task_manager/presentation/controllers/auth_controller.dart';
+import 'package:task_manager/presentation/controllers/auth/auth_controller.dart';
 
 class SignInController extends GetxController {
   bool _inProgress = false;

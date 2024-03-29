@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager/presentation/controllers/sign_in_controller.dart';
+import 'package:task_manager/presentation/controllers/auth/sign_in_controller.dart';
 import 'package:task_manager/presentation/screens/auth/email_verification_screen.dart';
 import 'package:task_manager/presentation/screens/auth/sign_up_screen.dart';
 import 'package:task_manager/presentation/screens/main_bottom_nav_screen.dart';
@@ -105,11 +105,12 @@ class _SignInScreenState extends State<SignInScreen> {
                             fontSize: 16,
                           )),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const EmailVerificationScreen()));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             const EmailVerificationScreen()));
+                        Get.to(const EmailVerificationScreen());
                       },
                       child: const Text(
                         'Forgot Password?',
@@ -146,14 +147,10 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<void> _signIn() async {
-
-
     final bool result = await _signInController.signIn(
         _emailTEController.text.trim(), _passwordTEController.text);
 
     if (result) {
-
-
       if (mounted) {
         Navigator.pushAndRemoveUntil(
             context,
