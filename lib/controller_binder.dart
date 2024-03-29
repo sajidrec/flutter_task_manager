@@ -6,6 +6,7 @@ import 'package:task_manager/presentation/controllers/count_task_by_status_contr
 import 'package:task_manager/presentation/controllers/new_task_controller.dart';
 import 'package:task_manager/presentation/controllers/progress_task_controller.dart';
 import 'package:task_manager/presentation/controllers/sign_in_controller.dart';
+import 'package:task_manager/presentation/controllers/update_profile_controller.dart';
 
 class ControllerBinder extends Bindings {
   @override
@@ -17,5 +18,6 @@ class ControllerBinder extends Bindings {
     Get.lazyPut(() => CancelledTaskController());
     Get.lazyPut(() => CompletedTaskController());
     Get.lazyPut(() => ProgressTaskController());
+    Get.lazyPut(() => UpdateProfileController());
   }
 }

@@ -6,7 +6,6 @@ import 'package:task_manager/presentation/controllers/auth_controller.dart';
 import 'package:task_manager/presentation/screens/auth/sign_in_screen.dart';
 import 'package:task_manager/presentation/screens/update_profile_screen.dart';
 import 'package:task_manager/presentation/utils/app_colors.dart';
-import 'package:task_manager/presentation/utils/on_update_screen.dart';
 
 PreferredSizeWidget get profileAppBar {
   return AppBar(

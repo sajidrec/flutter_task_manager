@@ -146,32 +146,13 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<void> _signIn() async {
-    // _isLoginInProgress = true;
-    // setState(() {});
-    // Map<String, dynamic> inputParams = {
-    //   'email': _emailTEController.text.trim(),
-    //   'password': _passwordTEController.text,
-    // };
-    // final ResponseObject response = await NetworkCaller.postRequest(
-    //     Urls.login, inputParams,
-    //     fromSignIn: true);
-    // _isLoginInProgress = false;
-    // setState(() {});
+
 
     final bool result = await _signInController.signIn(
         _emailTEController.text.trim(), _passwordTEController.text);
 
     if (result) {
-      // if (!mounted) {
-      //   return;
-      // }
-      //
-      // LoginResponse loginResponse =
-      //     LoginResponse.fromJson(response.responseBody);
-      //
-      // /// Save the data to local cache
-      // await AuthController.saveUserData(loginResponse.userData!);
-      // await AuthController.saveUserToken(loginResponse.token!);
+
 
       if (mounted) {
         Navigator.pushAndRemoveUntil(

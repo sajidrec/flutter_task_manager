@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:task_manager/data/models/user_data.dart';
-import 'package:task_manager/data/services/network_caller.dart';
-import 'package:task_manager/data/utility/urls.dart';
 import 'package:task_manager/presentation/controllers/auth_controller.dart';
+import 'package:task_manager/presentation/controllers/update_profile_controller.dart';
 import 'package:task_manager/presentation/screens/main_bottom_nav_screen.dart';
 import 'package:task_manager/presentation/utils/on_update_screen.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
@@ -29,7 +27,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   XFile? _pickedImage;
-  bool _updateProfileInProgress = false;
+
+  final UpdateProfileController _updateProfileController =
+      Get.find<UpdateProfileController>();
 
   @override
   void initState() {
@@ -115,7 +115,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       keyboardType: TextInputType.phone,
                       decoration: const InputDecoration(hintText: 'Mobile'),
                       validator: (String? value) {
-                        if (value?.trim().length != 11 ?? true) {
+                        if (value?.trim().length != 11) {
                           return 'Enter valid mobile number (11 length)';
                         }
                         return null;
@@ -145,20 +145,24 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     ),
                     SizedBox(
                       width: double.infinity,
-                      child: Visibility(
-                        visible: _updateProfileInProgress == false,
-                        replacement: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _updateProfile();
-                            }
-                          },
-                          child: const Icon(Icons.arrow_circle_right_outlined),
-                        ),
-                      ),
+                      child: GetBuilder<UpdateProfileController>(
+                          builder: (updateProfileController) {
+                        return Visibility(
+                          visible: !_updateProfileController.inProgress,
+                          replacement: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _updateProfile();
+                              }
+                            },
+                            child:
+                                const Icon(Icons.arrow_circle_right_outlined),
+                          ),
+                        );
+                      }),
                     ),
                   ],
                 ),
@@ -223,63 +227,46 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   Future<void> _updateProfile() async {
     String? photo;
 
-    _updateProfileInProgress = true;
-    setState(() {});
-
-    Map<String, dynamic> inputParams = {
-      "email": _emailTEController.text,
-      "firstName": _firstNameTEController.text.trim(),
-      "lastName": _lastNameTEController.text.trim(),
-      "mobile": _mobileTEController.text.trim(),
-    };
-
-    if (_passwordTEController.text.isNotEmpty) {
-      inputParams['password'] = _passwordTEController.text;
-    }
-
     if (_pickedImage != null) {
       List<int> bytes = File(_pickedImage!.path).readAsBytesSync();
       photo = base64Encode(bytes);
-      inputParams['photo'] = photo;
-    } else {
-      final response = await get(
-        Uri.parse(
-          "https://i.ibb.co/7vj91CB/ok.png",
-        ),
-      );
-
-      photo = base64Encode(response.bodyBytes);
-
-      // inputParams['photo'] = photo;
+      _updateProfileController.setPhoto = photo;
     }
 
-    final response =
-        await NetworkCaller.postRequest(Urls.updateProfile, inputParams);
-    _updateProfileInProgress = false;
-    if (response.isSuccess) {
-      if (response.responseBody['status'] == 'success') {
-        UserData userData = UserData(
-          email: _emailTEController.text,
-          firstName: _firstNameTEController.text.trim(),
-          lastName: _lastNameTEController.text.trim(),
-          mobile: _mobileTEController.text.trim(),
-          photo: photo ?? "",
-        );
-        await AuthController.saveUserData(userData);
-      }
+    final result = await _updateProfileController.upDateProfile(
+      _emailTEController.text.trim(),
+      _firstNameTEController.text.trim(),
+      _lastNameTEController.text.trim(),
+      _mobileTEController.text,
+      _passwordTEController.text,
+    );
+
+    if (result) {
       if (mounted) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const MainBottomNavScreen()),
-            (route) => false);
+        // Navigator.pushAndRemoveUntil(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => const MainBottomNavScreen()),
+        //     (route) => false);
+        Get.offAll(const MainBottomNavScreen());
+        showSnackBarMessage(context, "update successful", false);
       }
     } else {
       if (!mounted) {
         return;
       }
+      showSnackBarMessage(context, _updateProfileController.errorMessage);
       setState(() {});
-      showSnackBarMessage(context, 'Update profile failed! Try again.');
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailTEController.dispose();
+    _firstNameTEController.dispose();
+    _lastNameTEController.dispose();
+    _mobileTEController.dispose();
+    _passwordTEController.dispose();
   }
 }
