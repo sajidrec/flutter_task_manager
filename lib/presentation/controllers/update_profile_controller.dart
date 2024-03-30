@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:get/get.dart';
 import 'package:task_manager/data/models/user_data.dart';
 import 'package:task_manager/data/services/network_caller.dart';
@@ -39,11 +36,11 @@ class UpdateProfileController extends GetxController {
       inputParams['password'] = password;
     }
 
-    if (_photo == null) {
-      List<int> bytes =
-          File(AuthController.userData!.getPhoto).readAsBytesSync();
-      _photo = base64Encode(bytes);
-    }
+    // if (_photo == null) {
+    //   List<int> bytes =
+    //       File(AuthController.userData!.getPhoto).readAsBytesSync();
+    //   _photo = base64Encode(bytes);
+    // }
 
     inputParams['photo'] = _photo;
 

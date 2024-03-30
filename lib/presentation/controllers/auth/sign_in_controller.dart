@@ -36,6 +36,7 @@ class SignInController extends GetxController {
       await AuthController.saveUserData(loginResponse.userData!);
       await AuthController.saveUserToken(loginResponse.token!);
 
+
       update();
       return true;
     } else {

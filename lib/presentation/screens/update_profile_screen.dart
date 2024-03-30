@@ -228,10 +228,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     String? photo;
 
     if (_pickedImage != null) {
-
       List<int> bytes = File(_pickedImage!.path).readAsBytesSync();
       photo = base64Encode(bytes);
       _updateProfileController.setPhoto = photo;
+    } else {
+      _updateProfileController.setPhoto = AuthController.userData?.photo ?? "";
     }
 
     final result = await _updateProfileController.upDateProfile(
