@@ -31,7 +31,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
           return;
         }
         // Navigator.pop(context, _shouldRefreshNewTaskList);
-        Get.back(canPop: _shouldRefreshNewTaskList);
+        Get.back(result: _shouldRefreshNewTaskList);
       },
       child: Scaffold(
         appBar: profileAppBar,
