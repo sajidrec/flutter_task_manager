@@ -1,10 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:task_manager/data/models/response_object.dart';
-import 'package:task_manager/data/services/network_caller.dart';
-import 'package:task_manager/data/utility/urls.dart';
+import 'package:get/get.dart';
+import 'package:task_manager/presentation/controllers/auth/sign_up_controller.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
 import 'package:task_manager/presentation/widgets/password_validation_checker.dart';
 import 'package:task_manager/presentation/widgets/show_snack_bar_message.dart';
@@ -23,7 +19,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _mobileTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _isRegistrationInProgress = false;
+
+  final SignUpController _signUpController = Get.find<SignUpController>();
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       hintText: 'Mobile',
                     ),
                     validator: (String? value) {
-                      if (value?.trim().length != 11 ?? true) {
+                      if (value?.trim().length != 11) {
                         return 'Enter valid mobile number (11 length)';
                       }
                       return null;
@@ -129,20 +126,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: Visibility(
-                      visible: _isRegistrationInProgress == false,
-                      replacement: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _signUp();
-                          }
-                        },
-                        child: const Icon(Icons.arrow_circle_right_outlined),
-                      ),
-                    ),
+                    child: GetBuilder<SignUpController>(
+                        builder: (signUpController) {
+                      return Visibility(
+                        visible: !signUpController.inProgress,
+                        replacement: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _signUp();
+                            }
+                          },
+                          child: const Icon(Icons.arrow_circle_right_outlined),
+                        ),
+                      );
+                    }),
                   ),
                   const SizedBox(
                     height: 32,
@@ -174,40 +174,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _signUp() async {
-    _isRegistrationInProgress = true;
-    setState(() {});
-
-    Map<String, dynamic> inputParams = {
-      "email": _emailTEController.text.trim(),
-      "firstName": _firstNameTEController.text.trim(),
-      "lastName": _lastNameTEController.text.trim(),
-      "mobile": _mobileTEController.text.trim(),
-      "password": _passwordTEController.text,
-      "photo": "",
-    };
-
-    final dummyImage = await get(
-      Uri.parse(
-        "https://i.ibb.co/7vj91CB/ok.png",
-      ),
+    final result = await _signUpController.signUp(
+      email: _emailTEController.text.trim(),
+      firstName: _firstNameTEController.text.trim(),
+      lastName: _lastNameTEController.text.trim(),
+      mobile: _mobileTEController.text.trim(),
+      password: _passwordTEController.text.trim(),
     );
 
-    inputParams["photo"] = base64Encode(dummyImage.bodyBytes);
-
-    final ResponseObject response =
-        await NetworkCaller.postRequest(Urls.registration, inputParams);
-
-    _isRegistrationInProgress = false;
-    setState(() {});
-
-    if (response.isSuccess) {
+    if (result) {
       if (mounted) {
         showSnackBarMessage(context, 'Registration success! Please login.');
-        Navigator.pop(context);
+        Get.back();
       }
     } else {
       if (mounted) {
-        showSnackBarMessage(context, 'Registration failed! Try again.', true);
+        showSnackBarMessage(context, _signUpController.errorMessage, true);
       }
     }
   }
