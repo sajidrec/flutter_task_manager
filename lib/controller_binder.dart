@@ -15,14 +15,22 @@ import 'package:task_manager/presentation/controllers/update_profile_controller.
 class ControllerBinder extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => SignInController());
-    Get.lazyPut(() => CountTaskByStatusController());
-    Get.lazyPut(() => NewTaskController());
-    Get.lazyPut(() => AddNewTaskController());
-    Get.lazyPut(() => CancelledTaskController());
-    Get.lazyPut(() => CompletedTaskController());
-    Get.lazyPut(() => ProgressTaskController());
-    Get.lazyPut(() => UpdateProfileController());
+    // Get.lazyPut(() => SignInController());
+    Get.put(SignInController());
+    // Get.lazyPut(() => CountTaskByStatusController());
+    Get.put(CountTaskByStatusController());
+    // Get.lazyPut(() => NewTaskController());
+    Get.put(NewTaskController());
+    // Get.lazyPut(() => AddNewTaskController());
+    Get.put(AddNewTaskController());
+    // Get.lazyPut(() => CancelledTaskController());
+    Get.put(CancelledTaskController());
+    // Get.lazyPut(() => CompletedTaskController());
+    Get.put(CompletedTaskController());
+    // Get.lazyPut(() => ProgressTaskController());
+    Get.put(ProgressTaskController());
+    // Get.lazyPut(() => UpdateProfileController());
+    Get.put(UpdateProfileController());
     // Get.lazyPut(() => EmailVerificationController());
     Get.put(EmailVerificationController());
     Get.put(PinVerificationController());

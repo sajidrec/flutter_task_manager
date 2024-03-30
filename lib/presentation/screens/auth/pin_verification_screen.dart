@@ -8,7 +8,6 @@ import 'package:task_manager/presentation/utils/app_colors.dart';
 import 'package:task_manager/presentation/widgets/background_widget.dart';
 import 'package:task_manager/presentation/widgets/show_snack_bar_message.dart';
 
-
 class PinVerificationScreen extends StatefulWidget {
   const PinVerificationScreen({super.key, required this.email});
 
@@ -21,7 +20,6 @@ class PinVerificationScreen extends StatefulWidget {
 class _PinVerificationScreenState extends State<PinVerificationScreen> {
   final TextEditingController _pinTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
 
   final _pinVerificationController = Get.find<PinVerificationController>();
 
@@ -100,7 +98,6 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                                       widget.email, _pinTEController.text);
 
                               if (result) {
-
                                 if (mounted) {
                                   Get.off(
                                     SetPasswordScreen(
@@ -138,12 +135,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SignInScreen(),
-                              ),
-                              (route) => false);
+                          Get.offAll(const SignInScreen());
                         },
                         child: const Text(
                           'Sign in',
@@ -160,7 +152,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
     );
   }
 
-  // @override
+// @override
 // void dispose() {
 //   _pinTEController.dispose();
 //   super.dispose();
