@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/app.dart';
 import 'package:task_manager/presentation/controllers/auth/auth_controller.dart';
 import 'package:task_manager/presentation/screens/auth/sign_in_screen.dart';
@@ -19,16 +20,6 @@ PreferredSizeWidget get profileAppBar {
             builder: (context) => const UpdateProfileScreen(),
           ),
         );
-        // TODO: Some error occurred need to be fixed
-        // if (!OnUpdateScreen.alreadyTapped) {
-        //   OnUpdateScreen.alreadyTapped = true;
-        //   Navigator.push(
-        //     TaskManager.navigatorKey.currentState!.context,
-        //     MaterialPageRoute(
-        //       builder: (context) => const UpdateProfileScreen(),
-        //     ),
-        //   );
-        // }
       },
       child: Row(
         children: [
@@ -61,11 +52,12 @@ PreferredSizeWidget get profileAppBar {
           IconButton(
               onPressed: () async {
                 await AuthController.clearUserData();
-                Navigator.pushAndRemoveUntil(
-                    TaskManager.navigatorKey.currentState!.context,
-                    MaterialPageRoute(
-                        builder: (context) => const SignInScreen()),
-                    (route) => false);
+                // Navigator.pushAndRemoveUntil(
+                //     TaskManager.navigatorKey.currentState!.context,
+                //     MaterialPageRoute(
+                //         builder: (context) => const SignInScreen()),
+                //     (route) => false);
+                Get.offAll(const SignInScreen());
               },
               icon: const Icon(Icons.logout))
         ],
