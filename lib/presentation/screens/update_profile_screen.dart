@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:task_manager/presentation/controllers/auth/auth_controller.dart';
+import 'package:task_manager/presentation/controllers/new_task_controller.dart';
 import 'package:task_manager/presentation/controllers/update_profile_controller.dart';
 import 'package:task_manager/presentation/screens/main_bottom_nav_screen.dart';
 import 'package:task_manager/presentation/utils/on_update_screen.dart';
@@ -30,6 +31,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   final UpdateProfileController _updateProfileController =
       Get.find<UpdateProfileController>();
+
+  final NewTaskController _newTaskController = Get.find<NewTaskController>();
 
   @override
   void initState() {
@@ -245,6 +248,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
     if (result) {
       if (mounted) {
+        _newTaskController.doNotUpdate();
         Get.offAll(const MainBottomNavScreen());
         showSnackBarMessage(context, "update successful", false);
       }

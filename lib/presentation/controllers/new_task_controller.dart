@@ -6,6 +6,12 @@ import '../../data/utility/urls.dart';
 
 class NewTaskController extends GetxController {
   bool _inProgress = false;
+  bool _doNotUpdate = false;
+
+  void doNotUpdate() {
+    _doNotUpdate = true;
+  }
+
   String? _errorMessage;
   TaskListWrapper _newTaskListWrapper = TaskListWrapper();
 
@@ -16,6 +22,10 @@ class NewTaskController extends GetxController {
   TaskListWrapper get newTaskListWrapper => _newTaskListWrapper;
 
   Future<bool> getNewTaskList() async {
+    if (_doNotUpdate) {
+      _doNotUpdate = false;
+      return true;
+    }
     bool isSuccess = false;
     _inProgress = true;
     update();
