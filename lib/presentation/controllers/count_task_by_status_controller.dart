@@ -6,8 +6,13 @@ import '../../data/utility/urls.dart';
 
 class CountTaskByStatusController extends GetxController {
   bool _inProgress = false;
+  bool _doNotUpdate = false;
   String? _errorMessage;
   CountByStatusWrapper _countByStatusWrapper = CountByStatusWrapper();
+
+  void doNotUpdate() {
+    _doNotUpdate = true;
+  }
 
   bool get inProgress => _inProgress;
 
@@ -16,6 +21,10 @@ class CountTaskByStatusController extends GetxController {
   CountByStatusWrapper get countByStatusWrapper => _countByStatusWrapper;
 
   Future<bool> getCountByTaskStatus() async {
+    if (_doNotUpdate) {
+      _doNotUpdate = false;
+      return true;
+    }
     _inProgress = true;
     update();
     final response = await NetworkCaller.getRequest(Urls.taskCountByStatus);
